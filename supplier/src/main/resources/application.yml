@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: supplier_consumer
+  datasource:
+    username: sc
+    password: password
+    driver-class-name: org.postgresql.Driver
+    name: supplier-consumer-db
+    url: jdbc:postgresql://localhost:5432/supplier-consumer-db
+  jpa:
+    properties:
+      hibernate:
+        ddl-auto: update
+    generate-ddl: true
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+logging:
+  level:
+    org:
+      hibernate:
+        sql: info
+        type: trace
