@@ -1,6 +1,8 @@
 package com.pvxdv.supplier.service.impl;
 
 import com.pvxdv.supplier.dto.CategoryDTO;
+import com.pvxdv.supplier.exception.ResourceAlreadyExistException;
+import com.pvxdv.supplier.exception.ResourceNotFoundException;
 import com.pvxdv.supplier.model.Category;
 import com.pvxdv.supplier.repository.CategoryRepository;
 import com.pvxdv.supplier.service.CategoryService;
@@ -18,6 +20,7 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final String categoryNotFound = "Category with id=%d not found";
 
 
     @Override
@@ -28,8 +31,7 @@ public class CategoryServiceImpl implements CategoryService {
 
             return CategoryConverter.categoryToCategoryDTO(categoryRepository.save(categoryToSave));
         }
-        //todo exception
-        return null;
+       throw new ResourceAlreadyExistException("Category with name=%s already exist".formatted(categoryDTO.getName()));
     }
 
     @Override
@@ -50,9 +52,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (categoryExist(id)) {
             return CategoryConverter.categoryToCategoryDTO(categoryRepository.findById(id).get());
         }
-        //todo exception
-        return null;
-
+       throw new ResourceNotFoundException(categoryNotFound.formatted(id));
     }
 
     @Override
@@ -63,8 +63,7 @@ public class CategoryServiceImpl implements CategoryService {
             log.debug("Category with id=%d update successfully =%s".formatted(id, categoryToUpdate));
             return CategoryConverter.categoryToCategoryDTO(categoryRepository.save(categoryToUpdate));
         }
-        //todo exception
-        return null;
+        throw new ResourceNotFoundException(categoryNotFound.formatted(id));
     }
 
     @Override
@@ -73,7 +72,7 @@ public class CategoryServiceImpl implements CategoryService {
             categoryRepository.deleteById(id);
             log.debug("Category with id=%d delete successfully".formatted(id));
         }
-        //todo exception
+        throw new ResourceNotFoundException(categoryNotFound.formatted(id));
     }
 
     private Boolean categoryExist(Long id) {

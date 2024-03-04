@@ -1,6 +1,7 @@
 package com.pvxdv.supplier.service.impl;
 
 import com.pvxdv.supplier.dto.ProductDTO;
+import com.pvxdv.supplier.exception.ResourceNotFoundException;
 import com.pvxdv.supplier.model.Category;
 import com.pvxdv.supplier.model.Product;
 import com.pvxdv.supplier.repository.CategoryRepository;
@@ -20,6 +21,8 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final String productNotFound = "Product with id=%d not found";
+    private final String categoryNotFound = "Category with id=%d not found";
 
     @Override
     public ProductDTO createNewProduct(ProductDTO productDTO) {
@@ -30,8 +33,7 @@ public class ProductServiceImpl implements ProductService {
 
             return ProductConverter.productToProductDTO(productRepository.save(productToSave));
         }
-        //todo exception
-        return null;
+        throw new ResourceNotFoundException(categoryNotFound.formatted(productDTO.getCategoryId()));
     }
 
     @Override
@@ -52,8 +54,7 @@ public class ProductServiceImpl implements ProductService {
         if (productExist(id)) {
             return ProductConverter.productToProductDTO(productRepository.findById(id).get());
         }
-        //todo exception
-        return null;
+        throw new ResourceNotFoundException(productNotFound.formatted(id));
     }
 
     @Override
@@ -64,8 +65,7 @@ public class ProductServiceImpl implements ProductService {
                 if (categoryExist(productDTO.getCategoryId())) {
                     productToUpdate.setCategory(categoryRepository.findById(productDTO.getCategoryId()).get());
                 } else {
-                    //todo exception
-                    return null;
+                    throw new ResourceNotFoundException(categoryNotFound.formatted(productDTO.getCategoryId()));
                 }
             }
             if (productDTO.getName() != null) {
@@ -80,8 +80,7 @@ public class ProductServiceImpl implements ProductService {
             log.debug("Product with id=%d update successfully =%s".formatted(id, productToUpdate));
             return ProductConverter.productToProductDTO(productRepository.save(productToUpdate));
         }
-        //todo exception
-        return null;
+        throw new ResourceNotFoundException(productNotFound.formatted(id));
     }
 
     @Override
@@ -90,7 +89,7 @@ public class ProductServiceImpl implements ProductService {
             productRepository.deleteById(id);
             log.debug("Product with id=%d delete successfully".formatted(id));
         }
-        //todo exception
+        throw new ResourceNotFoundException(productNotFound.formatted(id));
     }
 
     private Boolean productExist(Long id) {
