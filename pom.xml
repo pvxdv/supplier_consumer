@@ -16,11 +16,6 @@
 	<name>supplier_consumer</name>
 	<description>supplier_consumer</description>
 
-	<modules>
-		<module>consumer</module>
-		<module>supplier</module>
-	</modules>
-
 	<properties>
 		<java.version>21</java.version>
 	</properties>

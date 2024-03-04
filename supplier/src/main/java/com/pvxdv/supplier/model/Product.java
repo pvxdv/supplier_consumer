@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 
@@ -14,20 +16,31 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "products")
+@ToString
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @NotBlank
     @Size(min = 4, max = 30)
+    @Column(name = "name")
     private String name;
+
+    @Lob
     @NotBlank
+    @Column(name = "description")
     private String description;
+
     @NotNull
     @Positive
+    @Column(name = "price", columnDefinition = "numeric")
     private BigDecimal price;
+
     @NotNull
-    @JoinColumn(name = "category_id")
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "categories_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Category category;
 }
