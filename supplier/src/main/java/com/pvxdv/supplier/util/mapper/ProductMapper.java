@@ -1,10 +1,10 @@
-package com.pvxdv.supplier.util;
+package com.pvxdv.supplier.util.mapper;
 
 import com.pvxdv.supplier.dto.ProductDTO;
 import com.pvxdv.supplier.model.Category;
 import com.pvxdv.supplier.model.Product;
 
-public class ProductConverter {
+public class ProductMapper {
     public static ProductDTO productToProductDTO(Product product){
         return ProductDTO.builder()
                 .id(product.getId())

@@ -19,6 +19,6 @@ public class Category {
 
     @NotBlank
     @Size(min = 4, max = 30)
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
 }

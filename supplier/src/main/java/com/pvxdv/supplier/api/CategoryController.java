@@ -20,9 +20,14 @@ public class CategoryController {
         return new ResponseEntity<>(categoryService.createNewCategory(categoryDTO), HttpStatus.CREATED);
     }
 
+//    @GetMapping()
+//    public ResponseEntity<List<CategoryDTO>> getAllCategories(){
+//        return new ResponseEntity<>(categoryService.findAllCategories(), HttpStatus.OK);
+//    }
+
     @GetMapping()
-    public ResponseEntity<List<CategoryDTO>> getAllCategories(){
-        return new ResponseEntity<>(categoryService.findAllCategories(), HttpStatus.OK);
+    public ResponseEntity<List<CategoryDTO>> searchCategories(@RequestParam(value = "search") String search){
+            return new ResponseEntity<>(categoryService.searchCategories(search), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

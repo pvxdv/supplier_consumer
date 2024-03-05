@@ -1,9 +1,9 @@
-package com.pvxdv.supplier.util;
+package com.pvxdv.supplier.util.mapper;
 
 import com.pvxdv.supplier.dto.CategoryDTO;
 import com.pvxdv.supplier.model.Category;
 
-public class CategoryConverter {
+public class CategoryMapper {
     public static Category categoryDTOToCategory(CategoryDTO categoryDTO){
         return Category.builder()
                 .id(categoryDTO.getId())

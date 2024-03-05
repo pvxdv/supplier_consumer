@@ -1,4 +1,4 @@
-package com.pvxdv.supplier.exception;
+package com.pvxdv.supplier.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

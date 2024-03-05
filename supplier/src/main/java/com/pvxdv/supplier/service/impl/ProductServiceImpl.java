@@ -7,7 +7,7 @@ import com.pvxdv.supplier.model.Product;
 import com.pvxdv.supplier.repository.CategoryRepository;
 import com.pvxdv.supplier.repository.ProductRepository;
 import com.pvxdv.supplier.service.ProductService;
-import com.pvxdv.supplier.util.ProductConverter;
+import com.pvxdv.supplier.util.mapper.ProductMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,10 +28,10 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO createNewProduct(ProductDTO productDTO) {
         if (categoryExist(productDTO.getCategoryId())) {
             Category productCategory = categoryRepository.findById(productDTO.getCategoryId()).get();
-            Product productToSave = ProductConverter.productDTOToProduct(productDTO, productCategory);
+            Product productToSave = ProductMapper.productDTOToProduct(productDTO, productCategory);
             log.debug("Added new Product = %s".formatted(productToSave));
 
-            return ProductConverter.productToProductDTO(productRepository.save(productToSave));
+            return ProductMapper.productToProductDTO(productRepository.save(productToSave));
         }
         throw new ResourceNotFoundException(categoryNotFound.formatted(productDTO.getCategoryId()));
     }
@@ -43,7 +43,7 @@ public class ProductServiceImpl implements ProductService {
         List<ProductDTO> response = new ArrayList<>(products.size());
 
         for (Product product : products) {
-            response.add(ProductConverter.productToProductDTO(product));
+            response.add(ProductMapper.productToProductDTO(product));
         }
 
         return response;
@@ -52,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO findProductById(Long id) {
         if (productExist(id)) {
-            return ProductConverter.productToProductDTO(productRepository.findById(id).get());
+            return ProductMapper.productToProductDTO(productRepository.findById(id).get());
         }
         throw new ResourceNotFoundException(productNotFound.formatted(id));
     }
@@ -78,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
                 productToUpdate.setPrice(productDTO.getPrice());
             }
             log.debug("Product with id=%d update successfully =%s".formatted(id, productToUpdate));
-            return ProductConverter.productToProductDTO(productRepository.save(productToUpdate));
+            return ProductMapper.productToProductDTO(productRepository.save(productToUpdate));
         }
         throw new ResourceNotFoundException(productNotFound.formatted(id));
     }
