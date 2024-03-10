@@ -61,6 +61,7 @@
             <version>${querydsl.version}</version>
             <classifier>jakarta</classifier>
         </dependency>
+
     </dependencies>
     <build>
         <plugins>

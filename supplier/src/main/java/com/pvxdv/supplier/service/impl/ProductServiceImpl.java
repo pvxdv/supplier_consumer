@@ -1,19 +1,24 @@
 package com.pvxdv.supplier.service.impl;
 
-import com.pvxdv.supplier.dto.ProductDTO;
+import com.pvxdv.supplier.dto.ProductDto;
+import com.pvxdv.supplier.util.searchFilter.ProductFilter;
 import com.pvxdv.supplier.exception.ResourceNotFoundException;
-import com.pvxdv.supplier.model.Category;
+import com.pvxdv.supplier.mapper.impl.ProductDtoToProductMapper;
+import com.pvxdv.supplier.mapper.impl.ProductToProductDtoMapper;
 import com.pvxdv.supplier.model.Product;
 import com.pvxdv.supplier.repository.CategoryRepository;
 import com.pvxdv.supplier.repository.ProductRepository;
 import com.pvxdv.supplier.service.ProductService;
-import com.pvxdv.supplier.util.mapper.ProductMapper;
+import com.pvxdv.supplier.util.searchFilter.QPredicates;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+
+import static com.pvxdv.supplier.model.QProduct.product;
+import static com.pvxdv.supplier.model.QCategory.category;
 
 @Slf4j
 @Service
@@ -21,66 +26,62 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ProductDtoToProductMapper productDtoToProductMapper;
+    private final ProductToProductDtoMapper productToProductDtoMapper;
     private final String productNotFound = "Product with id=%d not found";
-    private final String categoryNotFound = "Category with id=%d not found";
 
     @Override
-    public ProductDTO createNewProduct(ProductDTO productDTO) {
-        if (categoryExist(productDTO.getCategoryId())) {
-            Category productCategory = categoryRepository.findById(productDTO.getCategoryId()).get();
-            Product productToSave = ProductMapper.productDTOToProduct(productDTO, productCategory);
-            log.debug("Added new Product = %s".formatted(productToSave));
-
-            return ProductMapper.productToProductDTO(productRepository.save(productToSave));
-        }
-        throw new ResourceNotFoundException(categoryNotFound.formatted(productDTO.getCategoryId()));
+    public ProductDto createNewProduct(ProductDto productDTO) {
+        return productToProductDtoMapper.map(productRepository.save(productDtoToProductMapper.map(productDTO)));
     }
 
     @Override
-    public List<ProductDTO> findAllProducts() {
-        List<Product> products = productRepository.findAll();
-        log.debug("Find all products =%s".formatted(products));
-        List<ProductDTO> response = new ArrayList<>(products.size());
-
-        for (Product product : products) {
-            response.add(ProductMapper.productToProductDTO(product));
+    public Page<ProductDto> getProductsByFiler(ProductFilter filterDTO) {
+        var predicate = QPredicates.builder();
+        predicate.add(filterDTO.name(), product.name::containsIgnoreCase);
+        predicate.add(filterDTO.description(), product.description::containsIgnoreCase);
+        predicate.add(filterDTO.price(), product.price::loe);
+        if (categoryExist(filterDTO.categoryId())) {
+            predicate.add(categoryRepository.findById(filterDTO.categoryId()).get(), category::eq);
         }
 
-        return response;
+        return productRepository.findAll(predicate.build(), PageRequest.of(filterDTO.offset(), filterDTO.limit()))
+                .map(productToProductDtoMapper::map);
     }
 
     @Override
-    public ProductDTO findProductById(Long id) {
-        if (productExist(id)) {
-            return ProductMapper.productToProductDTO(productRepository.findById(id).get());
-        }
-        throw new ResourceNotFoundException(productNotFound.formatted(id));
+    public ProductDto findProductById(Long id) {
+        return productToProductDtoMapper.map(productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(productNotFound.formatted(id))));
+
     }
 
     @Override
-    public ProductDTO updateProductById(Long id, ProductDTO productDTO) {
+    public ProductDto updateProductById(Long id, ProductDto productDTO) {
         if (productExist(id)) {
             Product productToUpdate = productRepository.findById(id).get();
-            if (productDTO.getCategoryId() != null) {
-                if (categoryExist(productDTO.getCategoryId())) {
-                    productToUpdate.setCategory(categoryRepository.findById(productDTO.getCategoryId()).get());
+            if (productDTO.categoryId() != null) {
+                if (categoryExist(productDTO.categoryId())) {
+                    productToUpdate.setCategory(categoryRepository.findById(productDTO.categoryId()).get());
                 } else {
-                    throw new ResourceNotFoundException(categoryNotFound.formatted(productDTO.getCategoryId()));
+                    String categoryNotFound = "Category with id=%d not found";
+                    throw new ResourceNotFoundException(categoryNotFound.formatted(productDTO.categoryId()));
                 }
             }
-            if (productDTO.getName() != null) {
-                productToUpdate.setName(productDTO.getName());
+            if (productDTO.name() != null) {
+                productToUpdate.setName(productDTO.name());
             }
-            if (productDTO.getDescription() != null) {
-                productToUpdate.setDescription(productDTO.getDescription());
+            if (productDTO.description() != null) {
+                productToUpdate.setDescription(productDTO.description());
             }
-            if (productDTO.getPrice() != null) {
-                productToUpdate.setPrice(productDTO.getPrice());
+            if (productDTO.price() != null) {
+                productToUpdate.setPrice(productDTO.price());
             }
             log.debug("Product with id=%d update successfully =%s".formatted(id, productToUpdate));
-            return ProductMapper.productToProductDTO(productRepository.save(productToUpdate));
+            return productToProductDtoMapper.map(productRepository.save(productToUpdate));
+        } else {
+            throw new ResourceNotFoundException(productNotFound.formatted(id));
         }
-        throw new ResourceNotFoundException(productNotFound.formatted(id));
     }
 
     @Override
@@ -88,27 +89,23 @@ public class ProductServiceImpl implements ProductService {
         if (productExist(id)) {
             productRepository.deleteById(id);
             log.debug("Product with id=%d delete successfully".formatted(id));
+        } else {
+            throw new ResourceNotFoundException(productNotFound.formatted(id));
         }
-        throw new ResourceNotFoundException(productNotFound.formatted(id));
     }
 
     private Boolean productExist(Long id) {
-        Boolean productExist = productRepository.findById(id).isPresent();
-        if (productExist) {
-            log.debug("Find Product by id=%d - success".formatted(id));
+        if(id != null) {
+            return productRepository.findById(id).isPresent();
         } else {
-            log.debug("Find Product by id=%d - fail".formatted(id));
+            return false;
         }
-        return productExist;
     }
 
     private Boolean categoryExist(Long id) {
-        Boolean categoryExist = categoryRepository.findById(id).isPresent();
-        if (categoryExist) {
-            log.debug("Find Category by id=%d - success".formatted(id));
-        } else {
-            log.debug("Find Category by id=%d - fail".formatted(id));
+        if (id != null) {
+            return categoryRepository.findById(id).isPresent();
         }
-        return categoryExist;
+        return false;
     }
 }

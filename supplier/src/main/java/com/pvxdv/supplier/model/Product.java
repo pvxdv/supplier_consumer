@@ -12,7 +12,8 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.math.BigDecimal;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -28,7 +29,6 @@ public class Product {
     @Column(name = "name")
     private String name;
 
-    @Lob
     @NotBlank
     @Column(name = "description")
     private String description;

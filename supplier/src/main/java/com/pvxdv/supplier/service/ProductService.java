@@ -1,13 +1,17 @@
 package com.pvxdv.supplier.service;
 
-import com.pvxdv.supplier.dto.ProductDTO;
-
-import java.util.List;
+import com.pvxdv.supplier.dto.ProductDto;
+import com.pvxdv.supplier.util.searchFilter.ProductFilter;
+import org.springframework.data.domain.Page;
 
 public interface ProductService {
-    ProductDTO createNewProduct(ProductDTO productDTO);
-    List<ProductDTO> findAllProducts();
-    ProductDTO findProductById(Long id);
-    ProductDTO updateProductById(Long id, ProductDTO productDTO);
+    ProductDto createNewProduct(ProductDto productDTO);
+
+    ProductDto findProductById(Long id);
+
+    ProductDto updateProductById(Long id, ProductDto productDTO);
+
     void deleteProductById(Long id);
+
+    Page<ProductDto> getProductsByFiler(ProductFilter productFilterDTO);
 }

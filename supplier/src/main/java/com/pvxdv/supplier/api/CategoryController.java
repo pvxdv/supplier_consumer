@@ -1,6 +1,6 @@
 package com.pvxdv.supplier.api;
 
-import com.pvxdv.supplier.dto.CategoryDTO;
+import com.pvxdv.supplier.dto.CategoryDto;
 import com.pvxdv.supplier.service.CategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,27 +16,22 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping()
-    public ResponseEntity<CategoryDTO> createNewCategory (@RequestBody CategoryDTO categoryDTO){
+    public ResponseEntity<CategoryDto> createNewCategory (@RequestBody CategoryDto categoryDTO){
         return new ResponseEntity<>(categoryService.createNewCategory(categoryDTO), HttpStatus.CREATED);
     }
 
-//    @GetMapping()
-//    public ResponseEntity<List<CategoryDTO>> getAllCategories(){
-//        return new ResponseEntity<>(categoryService.findAllCategories(), HttpStatus.OK);
-//    }
-
     @GetMapping()
-    public ResponseEntity<List<CategoryDTO>> searchCategories(@RequestParam(value = "search") String search){
-            return new ResponseEntity<>(categoryService.searchCategories(search), HttpStatus.OK);
+    public ResponseEntity<List<CategoryDto>> getAllCategories(){
+        return new ResponseEntity<>(categoryService.findAllCategories(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long id){
+    public ResponseEntity<CategoryDto> getCategoryById(@PathVariable Long id){
         return new ResponseEntity<>(categoryService.findCategoryById(id), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDTO> updateCategoryById(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO){
+    public ResponseEntity<CategoryDto> updateCategoryById(@PathVariable Long id, @RequestBody CategoryDto categoryDTO){
         return new ResponseEntity<>(categoryService.updateCategoryById(id, categoryDTO), HttpStatus.OK);
     }
 
