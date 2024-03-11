@@ -7,6 +7,7 @@ import com.pvxdv.consumer.service.ProductService;
 import com.pvxdv.consumer.util.searchFilter.ProductFilter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -17,23 +18,23 @@ import org.springframework.stereotype.Service;
 public class ProductServiceImpl implements ProductService {
 
     @Override
-    public ProductDto createNewProduct(ProductDto productDTO) {
+    public ResponseEntity<ProductDto> createNewProduct(ProductDto productDTO) {
         return null;
     }
 
     @Override
-    public PageResponseDto<ProductDto> getProductsByFiler(ProductFilter filterDTO) {
+    public ResponseEntity<PageResponseDto<ProductDto>> getProductsByFiler(ProductFilter filterDTO) {
       return null;
     }
 
     @Override
-    public ProductDto findProductById(Long id) {
+    public ResponseEntity<ProductDto> findProductById(Long id) {
         return null;
     }
 
     @Override
-    public ProductDto updateProductById(Long id, ProductDto productDTO) {
-       return null;
+    public void updateProductById(Long id, ProductDto productDTO) {
+
     }
 
     @Override

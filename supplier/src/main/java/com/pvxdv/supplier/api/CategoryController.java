@@ -1,13 +1,12 @@
 package com.pvxdv.supplier.api;
 
 import com.pvxdv.supplier.dto.CategoryDto;
+import com.pvxdv.supplier.dto.CategoryListDto;
 import com.pvxdv.supplier.service.CategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/categories")
@@ -21,8 +20,9 @@ public class CategoryController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<CategoryDto>> getAllCategories(){
-        return new ResponseEntity<>(categoryService.findAllCategories(), HttpStatus.OK);
+    public ResponseEntity<CategoryListDto> getAllCategories(){
+        CategoryListDto response = new CategoryListDto(categoryService.findAllCategories());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -31,8 +31,9 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDto> updateCategoryById(@PathVariable Long id, @RequestBody CategoryDto categoryDTO){
-        return new ResponseEntity<>(categoryService.updateCategoryById(id, categoryDTO), HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public void updateCategoryById(@PathVariable Long id, @RequestBody CategoryDto categoryDTO){
+        categoryService.updateCategoryById(id, categoryDTO);
     }
 
     @DeleteMapping("/{id}")

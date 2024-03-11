@@ -2,17 +2,17 @@ package com.pvxdv.consumer.service;
 
 
 import com.pvxdv.consumer.dto.CategoryDto;
-
-import java.util.List;
+import com.pvxdv.consumer.dto.CategoryListDto;
+import org.springframework.http.ResponseEntity;
 
 public interface CategoryService {
-    CategoryDto createNewCategory(CategoryDto categoryDTO);
+    ResponseEntity<CategoryDto> createNewCategory(CategoryDto categoryDTO);
 
-    List<CategoryDto> findAllCategories();
+    ResponseEntity<CategoryListDto> findAllCategories();
 
-    CategoryDto findCategoryById(Long id);
+    ResponseEntity<CategoryDto> findCategoryById(Long id);
 
-    CategoryDto updateCategoryById(Long id, CategoryDto categoryDTO);
+    void updateCategoryById(Long id, CategoryDto categoryDTO);
 
     void deleteCategoryById(Long id);
 }

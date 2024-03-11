@@ -57,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto updateProductById(Long id, ProductDto productDTO) {
+    public void updateProductById(Long id, ProductDto productDTO) {
         if (productExist(id)) {
             Product productToUpdate = productRepository.findById(id).get();
             if (productDTO.categoryId() != null) {
@@ -78,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
                 productToUpdate.setPrice(productDTO.price());
             }
             log.debug("Product with id=%d update successfully =%s".formatted(id, productToUpdate));
-            return productToProductDtoMapper.map(productRepository.save(productToUpdate));
+            productRepository.save(productToUpdate);
         } else {
             throw new ResourceNotFoundException(productNotFound.formatted(id));
         }
@@ -95,7 +95,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private Boolean productExist(Long id) {
-        if(id != null) {
+        if (id != null) {
             return productRepository.findById(id).isPresent();
         } else {
             return false;

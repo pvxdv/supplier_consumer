@@ -1,4 +1,4 @@
-package com.pvxdv.supplier.error;
+package com.pvxdv.consumer.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,4 +11,5 @@ public class ErrorMessage {
     private Date timestamp;
     private String message;
     private String details;
+    private String supplierServiceStatusCode;
 }

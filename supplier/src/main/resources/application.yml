@@ -12,12 +12,4 @@ spring:
       hibernate:
         ddl-auto: create-drop
     generate-ddl: true
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
-logging:
-  level:
-    org:
-      hibernate:
-        sql: info
-        type: trace
+

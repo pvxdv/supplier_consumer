@@ -4,16 +4,17 @@ package com.pvxdv.consumer.service;
 import com.pvxdv.consumer.dto.PageResponseDto;
 import com.pvxdv.consumer.dto.ProductDto;
 import com.pvxdv.consumer.util.searchFilter.ProductFilter;
+import org.springframework.http.ResponseEntity;
 
 
 public interface ProductService {
-    ProductDto createNewProduct(ProductDto productDTO);
+    ResponseEntity<ProductDto> createNewProduct(ProductDto productDTO);
 
-    ProductDto findProductById(Long id);
+    ResponseEntity<ProductDto> findProductById(Long id);
 
-    ProductDto updateProductById(Long id, ProductDto productDTO);
+    void updateProductById(Long id, ProductDto productDTO);
 
     void deleteProductById(Long id);
 
-    PageResponseDto<ProductDto> getProductsByFiler(ProductFilter productFilterDTO);
+    ResponseEntity<PageResponseDto<ProductDto>> getProductsByFiler(ProductFilter productFilterDTO);
 }

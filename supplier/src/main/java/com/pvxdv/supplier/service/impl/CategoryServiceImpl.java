@@ -26,9 +26,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto createNewCategory(CategoryDto categoryDTO) {
-        if (!categoryExist(categoryDTO.id())) {
-            return categoryToCategoryDtoMapper.map(categoryRepository
-                    .save(categoryDtoToCategoryMapper.map(categoryDTO)));
+        if (categoryRepository.findCategoryByName(categoryDTO.name()).isEmpty()) {
+            if(!categoryExist(categoryDTO.id())){
+                return categoryToCategoryDtoMapper.map(categoryRepository
+                        .save(categoryDtoToCategoryMapper.map(categoryDTO)));
+            } else {
+                throw new ResourceAlreadyExistException("Category with id=%d already exist"
+                        .formatted(categoryDTO.id()));
+            }
         } else {
             throw new ResourceAlreadyExistException("Category with name=%s already exist"
                     .formatted(categoryDTO.name()));
@@ -50,7 +55,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto updateCategoryById(Long id, CategoryDto categoryDTO) {
+    public void updateCategoryById(Long id, CategoryDto categoryDTO) {
         if (categoryExist(id)) {
             Category categoryToUpdate = categoryRepository.findById(id).get();
 
@@ -59,7 +64,7 @@ public class CategoryServiceImpl implements CategoryService {
             }
 
             log.debug("Category with id=%d update successfully =%s".formatted(id, categoryToUpdate));
-            return categoryToCategoryDtoMapper.map(categoryRepository.save(categoryToUpdate));
+            categoryRepository.save(categoryToUpdate);
         } else {
             throw new ResourceNotFoundException(categoryNotFound.formatted(id));
         }
