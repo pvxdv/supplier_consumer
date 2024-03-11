@@ -18,7 +18,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank
+    @NotBlank()
     @Size(min = 4, max = 30)
     @Column(name = "name", unique = true)
     private String name;

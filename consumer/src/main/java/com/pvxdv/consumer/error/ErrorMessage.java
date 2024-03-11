@@ -10,6 +10,6 @@ import java.util.Date;
 public class ErrorMessage {
     private Date timestamp;
     private String message;
-    private String details;
-    private String supplierServiceStatusCode;
+    private String path;
+
 }

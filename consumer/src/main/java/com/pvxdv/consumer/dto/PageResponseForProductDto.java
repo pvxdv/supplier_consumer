@@ -4,8 +4,8 @@ import lombok.Value;
 import java.util.List;
 
 @Value
-public class PageResponseDto<T>{
-    List<T> content;
+public class PageResponseForProductDto{
+    List<ProductDto> content;
     Metadata metadata;
 
     @Value

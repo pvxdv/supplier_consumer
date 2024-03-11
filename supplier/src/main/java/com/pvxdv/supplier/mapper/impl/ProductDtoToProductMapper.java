@@ -24,7 +24,7 @@ public class ProductDtoToProductMapper implements Mapper<ProductDto, Product> {
         product.setName(productDto.name());
         product.setDescription(productDto.description());
         product.setPrice(productDto.price());
-        product.setCategory(getCategory(productDto.id()));
+        product.setCategory(getCategory(productDto.categoryId()));
         return product;
     }
 

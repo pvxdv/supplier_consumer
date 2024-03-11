@@ -10,6 +10,7 @@ import com.pvxdv.supplier.repository.CategoryRepository;
 import com.pvxdv.supplier.repository.ProductRepository;
 import com.pvxdv.supplier.service.ProductService;
 import com.pvxdv.supplier.util.searchFilter.QPredicates;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,12 +32,12 @@ public class ProductServiceImpl implements ProductService {
     private final String productNotFound = "Product with id=%d not found";
 
     @Override
-    public ProductDto createNewProduct(ProductDto productDTO) {
+    public ProductDto createNewProduct(@Valid ProductDto productDTO) {
         return productToProductDtoMapper.map(productRepository.save(productDtoToProductMapper.map(productDTO)));
     }
 
     @Override
-    public Page<ProductDto> getProductsByFiler(ProductFilter filterDTO) {
+    public Page<ProductDto> getProductsByFiler(@Valid ProductFilter filterDTO) {
         var predicate = QPredicates.builder();
         predicate.add(filterDTO.name(), product.name::containsIgnoreCase);
         predicate.add(filterDTO.description(), product.description::containsIgnoreCase);

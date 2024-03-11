@@ -8,6 +8,7 @@ import com.pvxdv.supplier.mapper.impl.CategoryToCategoryDtoMapper;
 import com.pvxdv.supplier.model.Category;
 import com.pvxdv.supplier.repository.CategoryRepository;
 import com.pvxdv.supplier.service.CategoryService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final String categoryNotFound = "Category with id=%d not found";
 
     @Override
-    public CategoryDto createNewCategory(CategoryDto categoryDTO) {
+    public CategoryDto createNewCategory(@Valid CategoryDto categoryDTO) {
         if (categoryRepository.findCategoryByName(categoryDTO.name()).isEmpty()) {
             if(!categoryExist(categoryDTO.id())){
                 return categoryToCategoryDtoMapper.map(categoryRepository
