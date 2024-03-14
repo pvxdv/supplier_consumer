@@ -19,9 +19,9 @@
 у сущности `Product`, который формируется по оценкам оставленным в комментарияк.
 При удалении сущности, все связанные с ней сущности ниже по иерархии - удаляются.
 
-### Структура базы данных
+### Структура базы данных:
 
-![db_structure](/resources/static/image/relationShema.png)
+![db_structure](supplier_service/src/main/resources/static/image/relationShema.png)
 
 ### Consumer Service
 Сервис не имеет собственной базы данных и посредством `RestTemplate` обращается к api 
