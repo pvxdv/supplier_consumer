@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: supplier_service
+  datasource:
+    username: sc
+    password: password
+    driver-class-name: org.postgresql.Driver
+    name: supplier_service_db
+    url: jdbc:postgresql://localhost:5432/supplier_service_db
+  jpa:
+    properties:
+      hibernate:
+        ddl-auto: create-drop
+    generate-ddl: true
+server:
+  port: 8081

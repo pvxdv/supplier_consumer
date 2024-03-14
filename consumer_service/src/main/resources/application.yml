@@ -1,0 +1,11 @@
+# default servet port
+server:
+  port: 8080
+
+# default swagger url
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+# default supplier service url
+service: http://localhost:8081
