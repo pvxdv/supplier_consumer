@@ -1,11 +1,19 @@
 package com.pvxdv.supplier.util.searchFilter;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import lombok.Value;
 
 import java.math.BigDecimal;
 
-
-public record ProductFilter(String name, String description, BigDecimal price, Long categoryId,
-                            @PositiveOrZero Integer offset, @PositiveOrZero @NotNull Integer limit) {
+@Value
+public class ProductFilter {
+    String name;
+    String description;
+    BigDecimal price;
+    Long categoryId;
+    @PositiveOrZero
+    int offset;
+    @Positive
+    int limit;
 }

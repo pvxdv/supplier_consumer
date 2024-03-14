@@ -6,7 +6,7 @@ import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 
 
-public record ProductDto(Long id,
+public record ProductDto(@PositiveOrZero Long id,
                          @NotBlank @Size(min = 4, max = 30) String name,
                          @NotBlank String description,
                          @NotNull

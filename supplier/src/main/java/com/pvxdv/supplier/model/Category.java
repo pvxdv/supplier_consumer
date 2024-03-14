@@ -8,11 +8,11 @@ import lombok.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Getter
 @Setter
-@Table(name = "categories")
 @ToString
+@Builder
+@Table(name = "categories")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

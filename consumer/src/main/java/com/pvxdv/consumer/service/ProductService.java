@@ -1,12 +1,10 @@
 package com.pvxdv.consumer.service;
 
 
-
 import com.pvxdv.consumer.dto.PageResponseForProductDto;
 import com.pvxdv.consumer.dto.ProductDto;
+import com.pvxdv.consumer.util.searchFilter.ProductFilter;
 import org.springframework.http.ResponseEntity;
-
-import java.util.Map;
 
 
 public interface ProductService {
@@ -18,5 +16,5 @@ public interface ProductService {
 
     void deleteProductById(Long id);
 
-    ResponseEntity<PageResponseForProductDto> getProductsByFiler(Map<String, Object> filterParams);
+    ResponseEntity<PageResponseForProductDto> getProductsByFiler(ProductFilter productFilter);
 }

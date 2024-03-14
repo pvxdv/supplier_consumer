@@ -3,6 +3,7 @@ package com.pvxdv.consumer.service.impl;
 
 import com.pvxdv.consumer.dto.CategoryDto;
 import com.pvxdv.consumer.dto.CategoryListDto;
+import com.pvxdv.consumer.error.ErrorMessage;
 import com.pvxdv.consumer.exception.RestTemplateException;
 import com.pvxdv.consumer.service.CategoryService;
 import lombok.AllArgsConstructor;
@@ -28,16 +29,19 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             return restTemplate.postForEntity(CREATE_CATEGORY_ENDPOINT_URL, categoryDTO, CategoryDto.class);
         } catch (HttpStatusCodeException e) {
-            throw new RestTemplateException(e.getMessage(), e.getStatusCode(), CREATE_CATEGORY_ENDPOINT_URL);
+            throw new RestTemplateException(e.getResponseBodyAs(ErrorMessage.class).getMessage(),
+                    e.getStatusCode(), CREATE_CATEGORY_ENDPOINT_URL);
         }
     }
+
 
     @Override
     public ResponseEntity<CategoryListDto> findAllCategories() {
         try {
             return restTemplate.getForEntity(GET_CATEGORIES_ENDPOINT_URL, CategoryListDto.class);
         } catch (HttpStatusCodeException e) {
-            throw new RestTemplateException(e.getMessage(), e.getStatusCode(), GET_CATEGORIES_ENDPOINT_URL);
+            throw new RestTemplateException(e.getResponseBodyAs(ErrorMessage.class).getMessage(),
+                    e.getStatusCode(), GET_CATEGORIES_ENDPOINT_URL);
         }
     }
 
@@ -46,7 +50,8 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             return restTemplate.getForEntity(GET_CATEGORY_ENDPOINT_URL, CategoryDto.class, id);
         } catch (HttpStatusCodeException e) {
-            throw new RestTemplateException(e.getMessage(), e.getStatusCode(), GET_CATEGORY_ENDPOINT_URL);
+            throw new RestTemplateException(e.getResponseBodyAs(ErrorMessage.class).getMessage(),
+                    e.getStatusCode(), GET_CATEGORY_ENDPOINT_URL);
         }
     }
 
@@ -55,7 +60,8 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             restTemplate.put(UPDATE_CATEGORY_ENDPOINT_URL, categoryDTO, id);
         } catch (HttpStatusCodeException e) {
-            throw new RestTemplateException(e.getMessage(), e.getStatusCode(), UPDATE_CATEGORY_ENDPOINT_URL);
+            throw new RestTemplateException(e.getResponseBodyAs(ErrorMessage.class).getMessage(),
+                    e.getStatusCode(), UPDATE_CATEGORY_ENDPOINT_URL);
         }
     }
 
@@ -64,7 +70,8 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             restTemplate.delete(DELETE_CATEGORY_ENDPOINT_URL, id);
         } catch (HttpStatusCodeException e) {
-            throw new RestTemplateException(e.getMessage(), e.getStatusCode(), DELETE_CATEGORY_ENDPOINT_URL);
+            throw new RestTemplateException(e.getResponseBodyAs(ErrorMessage.class).getMessage(),
+                    e.getStatusCode(), DELETE_CATEGORY_ENDPOINT_URL);
         }
     }
 }

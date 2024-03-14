@@ -8,7 +8,6 @@ import com.pvxdv.supplier.mapper.impl.CategoryToCategoryDtoMapper;
 import com.pvxdv.supplier.model.Category;
 import com.pvxdv.supplier.repository.CategoryRepository;
 import com.pvxdv.supplier.service.CategoryService;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,12 +22,12 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryToCategoryDtoMapper categoryToCategoryDtoMapper;
     private final CategoryDtoToCategoryMapper categoryDtoToCategoryMapper;
-    private final String categoryNotFound = "Category with id=%d not found";
+    private final String CATEGORY_NOT_FOUND = "Category with id=%d not found";
 
     @Override
-    public CategoryDto createNewCategory(@Valid CategoryDto categoryDTO) {
+    public CategoryDto createNewCategory(CategoryDto categoryDTO) {
         if (categoryRepository.findCategoryByName(categoryDTO.name()).isEmpty()) {
-            if(!categoryExist(categoryDTO.id())){
+            if (!categoryExist(categoryDTO.id())) {
                 return categoryToCategoryDtoMapper.map(categoryRepository
                         .save(categoryDtoToCategoryMapper.map(categoryDTO)));
             } else {
@@ -51,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto findCategoryById(Long id) {
         return categoryToCategoryDtoMapper.map(categoryRepository.findById(id).
-                orElseThrow(() -> new ResourceNotFoundException(categoryNotFound.formatted(id))));
+                orElseThrow(() -> new ResourceNotFoundException(CATEGORY_NOT_FOUND.formatted(id))));
 
     }
 
@@ -59,15 +58,12 @@ public class CategoryServiceImpl implements CategoryService {
     public void updateCategoryById(Long id, CategoryDto categoryDTO) {
         if (categoryExist(id)) {
             Category categoryToUpdate = categoryRepository.findById(id).get();
-
-            if (categoryDTO.name() != null && !categoryDTO.name().isBlank()) {
-                categoryToUpdate.setName(categoryDTO.name());
-            }
+            categoryToUpdate.setName(categoryDTO.name());
 
             log.debug("Category with id=%d update successfully =%s".formatted(id, categoryToUpdate));
             categoryRepository.save(categoryToUpdate);
         } else {
-            throw new ResourceNotFoundException(categoryNotFound.formatted(id));
+            throw new ResourceNotFoundException(CATEGORY_NOT_FOUND.formatted(id));
         }
     }
 
@@ -77,7 +73,7 @@ public class CategoryServiceImpl implements CategoryService {
             categoryRepository.deleteById(id);
             log.debug("Category with id=%d delete successfully".formatted(id));
         } else {
-            throw new ResourceNotFoundException(categoryNotFound.formatted(id));
+            throw new ResourceNotFoundException(CATEGORY_NOT_FOUND.formatted(id));
         }
     }
 

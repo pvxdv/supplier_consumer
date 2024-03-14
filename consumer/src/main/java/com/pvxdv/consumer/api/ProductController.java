@@ -4,15 +4,13 @@ package com.pvxdv.consumer.api;
 import com.pvxdv.consumer.dto.PageResponseForProductDto;
 import com.pvxdv.consumer.dto.ProductDto;
 import com.pvxdv.consumer.service.ProductService;
+import com.pvxdv.consumer.util.searchFilter.ProductFilter;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 
@@ -32,16 +30,12 @@ public class ProductController {
                                                                          @RequestParam Optional<String> description,
                                                                          @RequestParam Optional<BigDecimal> price,
                                                                          @RequestParam Optional<Long> categoryId,
-                                                                         @RequestParam @NonNull Integer offset,
-                                                                         @RequestParam @NonNull Integer limit) {
-        Map<String, Object> filterParams = new HashMap<>();
-        filterParams.put("name", name.orElse(null));
-        filterParams.put("description", description.orElse(null));
-        filterParams.put("price", price.orElse(null));
-        filterParams.put("categoryId", categoryId.orElse(null));
-        filterParams.put("offset", offset);
-        filterParams.put("limit", limit);
-        return productService.getProductsByFiler(filterParams);
+                                                                         @RequestParam Integer offset,
+                                                                         @RequestParam Integer limit) {
+        ProductFilter productFilter = new ProductFilter(name.orElse(null), description.orElse(null),
+                price.orElse(null), categoryId.orElse(null), offset, limit);
+
+        return productService.getProductsByFiler(productFilter);
     }
 
     @GetMapping("/{id}")
