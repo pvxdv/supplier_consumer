@@ -1,6 +1,6 @@
 # Supplier Consumer
 
-## Назначение проетка
+## Назначение проекта
 Проект служит для демонстрации работы с RestTemplate и состоит из двух микросервисов: 
  - `Supplier Service` 
  - `Consumer Service`
