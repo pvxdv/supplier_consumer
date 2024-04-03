@@ -15,12 +15,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.util.LinkedMultiValueMap;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -102,30 +104,57 @@ class ProductControllerTest extends IntegrationTestBase {
     }
 
     @Test
-    void getProductsByFilterSuccessfully() throws Exception {
-//        LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
-//        requestParams.add("name", "ca");
-//        requestParams.add("description", "s");
-//        requestParams.add("price", "50");
-//        requestParams.add("offset", "0");
-//        requestParams.add("limit", "1");
-//
-//        ResultActions response = mockMvc.perform(get("/api/v1/products/").params(requestParams));
+    void getProductsByFilterWithoutParametersSuccessfully() throws Exception {
+        LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.add("offset", "1");
+        requestParams.add("limit", "3");
 
-//        ResultActions response = mockMvc
-//                .perform(get("/api/v1/products?name={name}&?description={description}&?price={price}&?offset={offset}&?limit={limit}",
-//                        "ca", "s", new BigDecimal(50), 0, 1));
+        ResultActions response = mockMvc.perform(get("/api/v1/products").params(requestParams));
 
-//        ResultActions response = mockMvc.perform(get("/api/v1/products/")
-//                .param("name", "ca")
-//                .param("description", "s")
-//                .param("price", "50")
-//                .param("offset", "0")
-//                .param("limit", "1"))
-//                .andExpect(status().isOk());
-//
-//        response.andExpect(status().isOk());
-//        response.andExpect(jsonPath("$.content", hasSize(1)));
+        response.andExpect(status().isOk());
+        response.andExpect(jsonPath("$.content", hasSize(3)));
+    }
+
+    @Test
+    void getProductsByFilterWithOneParameterSuccessfully() throws Exception {
+        LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.add("name", "ca");
+        requestParams.add("offset", "0");
+        requestParams.add("limit", "1");
+
+        ResultActions response = mockMvc.perform(get("/api/v1/products").params(requestParams));
+
+        response.andExpect(status().isOk());
+        response.andExpect(jsonPath("$.content", hasSize(1)));
+    }
+
+    @Test
+    void getProductsByFilterWithTwoParametersSuccessfully() throws Exception {
+        LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.add("name", "ca");
+        requestParams.add("description", "s");
+        requestParams.add("offset", "0");
+        requestParams.add("limit", "1");
+
+        ResultActions response = mockMvc.perform(get("/api/v1/products").params(requestParams));
+
+        response.andExpect(status().isOk());
+        response.andExpect(jsonPath("$.content", hasSize(1)));
+    }
+
+    @Test
+    void getProductsByFilterWithTreeParametersSuccessfully() throws Exception {
+        LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.add("name", "ca");
+        requestParams.add("description", "s");
+        requestParams.add("price", "50");
+        requestParams.add("offset", "0");
+        requestParams.add("limit", "1");
+
+        ResultActions response = mockMvc.perform(get("/api/v1/products").params(requestParams));
+
+        response.andExpect(status().isOk());
+        response.andExpect(jsonPath("$.content", hasSize(1)));
     }
 
     @Test
